@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <title>Utopian Reports!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+      <style>
+          #chartdiv {
+  width: 100%;
+  height: 500px;
+  font-size: 11px;
+}
+
+.amcharts-pie-slice {
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition-duration: 0.3s;
+  transition: all .3s ease-out;
+  -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  cursor: pointer;
+  box-shadow: 0 0 30px 0 #000;
+}
+
+.amcharts-pie-slice:hover {
+  transform: scale(1.1);
+  filter: url(#shadow);
+}
+      </style>
+  </head>
+  <body>
+  <!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <img src="https://utopian.io/img/utopian-sole.png" height="30px" class="d-inline-block align-top" alt="">
+    Utopian Reports
+  </a>
+</nav>
+  <br>
+    <div class="container">
+        <div class="row">
+
+             <!-- Pending Rewards -->
+            <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Pending Rewards</h5>
+                    <p class="card-text"></p>
+                    <a href="#" class="btn btn-warning btn-block">$ {{ stats.total_pending_rewards }}</a>
+                  </div>
+                </div>
+              </div>
+
+           <!-- Released Contributors Rewards -->
+            <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Contributors Rewards</h5>
+                    <p class="card-text"></p>
+                    <a href="#" class="btn btn-success btn-block">$ {{ stats.total_paid_authors }}</a>
+                  </div>
+                </div>
+              </div>
+
+            <!-- Released Curators Rewards -->
+            <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Curators Rewards</h5>
+                    <p class="card-text"></p>
+                    <a href="#" class="btn btn-dark btn-block">$ {{ stats.total_paid_curators }}</a>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+<div id="chartdiv"></div>
+
+    </div>
+
+  <script>
+
+     var chart = AmCharts.makeChart("chartdiv", {
+  "type": "pie",
+  "startDuration": 0,
+   "theme": "light",
+  "addClassNames": true,
+  "legend":{
+   	"position":"right",
+    "marginRight":100,
+    "autoMargins":false
+  },
+  "innerRadius": "30%",
+  "defs": {
+    "filter": [{
+      "id": "shadow",
+      "width": "200%",
+      "height": "200%",
+      "feOffset": {
+        "result": "offOut",
+        "in": "SourceAlpha",
+        "dx": 0,
+        "dy": 0
+      },
+      "feGaussianBlur": {
+        "result": "blurOut",
+        "in": "offOut",
+        "stdDeviation": 5
+      },
+      "feBlend": {
+        "in": "SourceGraphic",
+        "in2": "blurOut",
+        "mode": "normal"
+      }
+    }]
+  },
+  "dataProvider": [{
+    "country": "Blog",
+    "litres": {{ stats.categories.blog.total_posts }}
+  }, {
+    "country": "Social",
+    "litres": {{ stats.categories.social.total_posts }}
+  }, {
+    "country": "Analysis",
+    "litres": {{ stats.categories.analysis.total_posts }}
+  }, {
+    "country": "Tutorials",
+    "litres": {{ stats.categories.tutorials.total_posts }}
+  }, {
+    "country": "Video Tutorials",
+    "litres": {{ stats.categories.tutorials.total_posts }}
+  }, {
+    "country": "CopyWriting",
+    "litres": {{ stats.categories.copywriting.total_posts }}
+  }, {
+    "country": "Documentation",
+    "litres": {{ stats.categories.documentation.total_posts }}
+  }, {
+    "country": "Graphics",
+    "litres": {{ stats.categories.graphics.total_posts }}
+  }, {
+    "country": "Translations",
+    "litres": {{ stats.categories.translations.total_posts }}
+  }, {
+    "country": "Bug Hunting",
+    "litres": 765
+  }, {
+    "country": "Development",
+    "litres": {{ stats.categories.development.total_posts }}
+  }, {
+    "country": "Sub Projects",
+    "litres": 5
+  }, {
+    "country": "Ideas",
+    "litres": {{ stats.categories.ideas.total_posts }}
+  }, {
+    "country": "Tasks",
+    "litres": 39
+  }],
+  "valueField": "litres",
+  "titleField": "country",
+  "export": {
+    "enabled": true
+  }
+});
+
+chart.addListener("init", handleInit);
+
+chart.addListener("rollOverSlice", function(e) {
+  handleRollOver(e);
+});
+
+function handleInit(){
+  chart.legend.addListener("rollOverItem", handleRollOver);
+}
+
+function handleRollOver(e){
+  var wedge = e.dataItem.wedge.node;
+  wedge.parentNode.appendChild(wedge);
+}
+
+  </script>
+  </body>
+</html>
